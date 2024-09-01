@@ -9,7 +9,7 @@ interface ShopItem {
 }
 /* assign interface/type to the function definition properly */
 const q4 = (hero: Hero, shopItems: ShopItem[]): Hero => {
-  shopItems.forEach(shopItem => {
+  shopItems.map(shopItem => {
     if (hero.gold >= shopItem.price) {
       hero.items.push(shopItem.item);
       hero.gold -= shopItem.price;
