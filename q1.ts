@@ -7,7 +7,11 @@ interface Hero {
 
 const q1 = (hero: Hero): Hero => {
   hero.hp += 10; // Add 10 to hp
-  hero.luckyHp = hero.hp % 8 === 0; // Check if new hp is divisible by 8 and set luckyHp
+  if(hero.hp % 8 === 0){
+    hero.luckyHp = true; // If true, hero is lucky
+  }else{
+    hero.luckyHp = false; // If false, hero is not lucky
+  } // Check if new hp is divisible by 8 and set luckyHp
   return hero;
 };
 
