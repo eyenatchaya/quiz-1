@@ -1,63 +1,62 @@
-/* define interface for Mafia objects */
-interface Mafia {
-  id: number;
-  power: number;
-}
-
-interface Fight {
-  mafiaId: number;
-  Score: number;
-}
-
-/* assign interface/type to the function definition properly */
-const q5 = (mafias: Mafia[], fights: Fight[]): Mafia => {
-  // Initialize a map to keep track of scores for each mafia
-  const scoresMap: { [key: number]: number } = {};
-
-  // Initialize scores for each mafia based on their initial power
-  mafias.forEach(mafia => {
-    scoresMap[mafia.id] = mafia.power;
-  });
-
-  // Update the scores based on the fights
-  fights.forEach(fight => {
-    if (scoresMap.hasOwnProperty(fight.mafiaId)) {
-      scoresMap[fight.mafiaId] += fight.Score;
-    }
-  });
-
-  // Find the mafia with the maximum score
-  let maxScore = -Infinity;
-  let bestMafia: Mafia | null = null;
-
-  for (const mafia of mafias) {
-    if (scoresMap[mafia.id] > maxScore) {
-      maxScore = scoresMap[mafia.id];
-      bestMafia = mafia;
-    }
+function func() {
+  class Mafia {
+    constructor(public id: number, public power: number) {}
   }
 
-  return bestMafia!;
-};
+  function findStrongestMafia(mafias: Mafia[], fights: [number, number][]): Mafia | null {
+    // สร้าง Map เพื่อเก็บข้อมูลมาเฟียโดยใช้ ID เป็น key
+    const mafiaMap = new Map<number, Mafia>();
+    mafias.forEach(mafia => mafiaMap.set(mafia.id, mafia));
 
-// Test cases
-const mafias = [
-  { id: 1, power: 5 },
-  { id: 2, power: 30 },
-  { id: 3, power: 60 },
-  { id: 4, power: 42 },
-  { id: 5, power: 70 },
-];
+    // อัปเดตพลังของมาเฟียหลังจากการต่อสู้
+    fights.forEach(fight => {
+      const mafia1 = mafiaMap.get(fight[0]);
+      const mafia2 = mafiaMap.get(fight[1]);
 
-const fights = [
-  { mafiaId: 5, Score: 10 },
-  { mafiaId: 2, Score: 20 },
-  { mafiaId: 4, Score: 15 },
-  { mafiaId: 3, Score: 25 },
-  { mafiaId: 1, Score: 5 },
-  { mafiaId: 3, Score: 10 },
-];
+      if (mafia1 && mafia2) {
+        if (mafia1.power > mafia2.power) {
+          mafia1.power += mafia2.power;
+        } else {
+          mafia2.power += mafia1.power;
+        }
 
-console.log(q5(mafias, fights)); // Expected output: { id: 3, power: 95 }
+        // อัปเดต Mafia map หลังการต่อสู้
+        mafiaMap.set(mafia1.id, mafia1);
+        mafiaMap.set(mafia2.id, mafia2);
+      }
+    });
 
-export default q5;
+    // หามาเฟียที่มีพลังมากที่สุด
+    let strongestMafia: Mafia | null = null;
+    let maxPower = -Infinity;
+
+    for (const mafia of mafiaMap.values()) {
+      if (mafia.power > maxPower) {
+        strongestMafia = mafia;
+        maxPower = mafia.power;
+      }
+    }
+
+    return strongestMafia;
+  }
+
+  // ตัวอย่างการใช้งาน
+  const mafias = [
+    new Mafia(1, 50),
+    new Mafia(2, 30),
+    new Mafia(3, 60),
+    new Mafia(4, 42),
+    new Mafia(5, 70)
+  ];
+
+  const fights: [number, number][] = [
+    [5, 2],
+    [4, 3],
+    [1, 3]
+  ];
+
+  const result = findStrongestMafia(mafias, fights);
+  console.log(result); // Output: Mafia { id: 3, power: 107 }
+}
+
+export default func;
