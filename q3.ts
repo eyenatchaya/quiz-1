@@ -6,8 +6,14 @@ interface Runner {
 
 /* assign interface/type to the function definition properly */
 const q3 = (runners: Runner[]): Runner[] => {
-  const winner = runners.filter(runner =>runner.time > 54);
-  return winner;
+  let avg:number = 0;
+  let sum:number = 0;
+  for(let i:number = 0; i < runners.length; i++) {
+    sum += runners[i].time;
+  }
+  avg = sum / runners.length;
+  let filterTime = runners.filter((runner: Runner):boolean => runner.time <= avg);
+  return filterTime;
 };
 
 //test cases
